@@ -1,1 +1,343 @@
-404
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Não Encontrada - Rome Vídeos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #e94560;
+            --dark: #121212;
+            --dark-secondary: #1e1e2e;
+            --light: #f0f0f0;
+            --gray: #b0b0b0;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: var(--light);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            line-height: 1;
+            text-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .error-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .error-description {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #d63447;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--dark-secondary);
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .error-illustration {
+            max-width: 300px;
+            margin: 2rem 0;
+            opacity: 0.8;
+        }
+
+        .error-search {
+            margin-top: 2rem;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-box {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--dark-secondary);
+            border-radius: 5px 0 0 5px;
+            background-color: var(--dark);
+            color: var(--light);
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #d63447;
+        }
+
+        .error-links {
+            margin-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .error-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .error-links a:hover {
+            color: var(--primary);
+        }
+
+        footer {
+            background: #1a1a2e;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .error-code {
+                font-size: 6rem;
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .error-illustration {
+                max-width: 200px;
+            }
+        }
+
+        /* Animação para o número 404 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .error-code {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Efeito de digitação para a mensagem */
+        .typing-effect {
+            overflow: hidden;
+            border-right: 2px solid var(--primary);
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Rome<span>Vídeos</span></div>
+        
+        <div class="error-code">404</div>
+        
+        <h1 class="error-title typing-effect">Página Não Encontrada</h1>
+        
+        <p class="error-description">
+            A página que você está procurando não existe ou foi movida. 
+            Verifique o URL digitado ou volte para a página inicial.
+        </p>
+
+        <!-- Ilustração SVG -->
+        <div class="error-illustration">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="100" r="80" fill="#1e1e2e" stroke="#e94560" stroke-width="3"/>
+                <circle cx="80" cy="80" r="10" fill="#e94560"/>
+                <circle cx="120" cy="80" r="10" fill="#e94560"/>
+                <path d="M70 130 Q100 150 130 130" stroke="#e94560" stroke-width="3" fill="none"/>
+                <path d="M60 40 L80 20" stroke="#e94560" stroke-width="3"/>
+                <path d="M140 40 L160 20" stroke="#e94560" stroke-width="3"/>
+            </svg>
+        </div>
+
+        <div class="error-actions">
+            <a href="index.html" class="btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Voltar para a Página Inicial
+            </a>
+            
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Voltar à Página Anterior
+            </a>
+        </div>
+
+        <div class="error-search">
+            <p>Encontre o que você procura:</p>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Digite sua pesquisa...">
+                <button class="search-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="error-links">
+            <a href="index.html">Página Inicial</a>
+            <a href="conteudo.html">Conteúdo Exclusivo</a>
+            <a href="sobre.html">Sobre Nós</a>
+            <a href="contato.html">Contato</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">
+            <p>&copy; 2023 Rome Vídeos - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        // Adicionar funcionalidade à barra de pesquisa
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-input').value;
+            if (searchTerm.trim()) {
+                // Em um site real, isso redirecionaria para a página de resultados de busca
+                alert(`Você pesquisou por: "${searchTerm}". Em um site real, isso redirecionaria para os resultados.`);
+            }
+        });
+
+        // Permitir busca com Enter
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-btn').click();
+            }
+        });
+
+        // Efeito de digitação para o título
+        setTimeout(function() {
+            document.querySelector('.typing-effect').style.borderRight = 'none';
+        }, 3500);
+    </script>
+</body>
+</html>
