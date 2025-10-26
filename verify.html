@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação de Token - Rome Vídeos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #e94560;
+            --dark: #121212;
+            --dark-secondary: #1e1e2e;
+            --light: #f0f0f0;
+            --gray: #b0b0b0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #f44336;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .card {
+            background-color: var(--dark-secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .subtitle {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .token-info {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1.5rem 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #d63447;
+        }
+
+        .btn-secondary {
+            background-color: var(--dark);
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-tertiary);
+        }
+
+        .success { color: var(--success); }
+        .warning { color: var(--warning); }
+        .error { color: var(--error); }
+
+        .loading {
+            color: var(--gray);
+            margin: 1rem 0;
+        }
+
+        .support-info {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+
+        .support-link {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .support-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Rome<span>Vídeos</span></div>
+        
+        <div class="card">
+            <!-- Conteúdo será preenchido pelo JavaScript -->
+            <div id="content">
+                <div class="icon">⏳</div>
+                <h1 class="title">Verificando acesso...</h1>
+                <p class="subtitle">Estamos validando seu token de acesso.</p>
+                <div class="loading" id="loadingMessage">
+                    Processando sua solicitação...
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 Rome Vídeos - Sistema de verificação de token</p>
+        </footer>
+    </div>
+
+    <script>
+        // Carregar arquivo CSV
+        async function loadTokenCSV() {
+            try {
+                const response = await fetch('/token.csv');
+                if (!response.ok) {
+                    throw new Error(`Não foi possível carregar a lista de tokens`);
+                }
+                const csvText = await response.text();
+                return parseCSV(csvText);
+            } catch (error) {
+                console.error('Erro ao carregar tokens:', error);
+                return [];
+            }
+        }
+
+        // Converter CSV para array de objetos
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            const result = [];
+            
+            // Ignorar o cabeçalho (primeira linha)
+            for (let i = 1; i < lines.length; i++) {
+                const [token, status] = lines[i].split(',');
+                if (token && status !== undefined) {
+                    result.push({
+                        token: token.trim(),
+                        status: status.trim() === 'true'
+                    });
+                }
+            }
+            
+            return result;
+        }
+
+        // Obter parâmetros da URL
+        function getURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                token: params.get('token')
+            };
+        }
+
+        // Elementos da página
+        const contentDiv = document.getElementById('content');
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        // Processar a verificação do token
+        async function verifyToken() {
+            const { token } = getURLParams();
+            
+            if (!token) {
+                showNoTokenMessage();
+                return;
+            }
+            
+            // Carregar tokens do CSV
+            loadingMessage.textContent = 'Verificando token...';
+            const tokenList = await loadTokenCSV();
+            
+            if (tokenList.length === 0) {
+                showSystemError();
+                return;
+            }
+            
+            // Verificar se o token existe na lista
+            const tokenData = tokenList.find(item => item.token === token.toUpperCase());
+            
+            if (tokenData) {
+                if (tokenData.status) {
+                    showValidTokenMessage(token);
+                    // Redirecionar para a home após 3 segundos
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 3000);
+                } else {
+                    showExpiredTokenMessage(token);
+                }
+            } else {
+                showInvalidTokenMessage(token);
+            }
+        }
+
+        // Mostrar mensagem quando não há token
+        function showNoTokenMessage() {
+            contentDiv.innerHTML = `
+                <div class="icon error">❌</div>
+                <h1 class="title">Token não informado</h1>
+                <p class="subtitle">É necessário fornecer um token de acesso para visualizar o conteúdo.</p>
+                <div class="support-info">
+                    <p>Certifique-se de acessar através da página inicial com um token válido.</p>
+                </div>
+                <div class="actions">
+                    <a href="index.html" class="btn btn-primary">Voltar para a página inicial</a>
+                </div>
+            `;
+        }
+
+        // Mostrar mensagem para token válido
+        function showValidTokenMessage(token) {
+            contentDiv.innerHTML = `
+                <div class="icon success">✅</div>
+                <h1 class="title">Acesso Permitido!</h1>
+                <p class="subtitle">Seu token foi verificado com sucesso.</p>
+                <div class="token-info">
+                    Token: ${token.substring(0, 3)}***${token.substring(token.length - 3)}
+                </div>
+                <p>Redirecionando para o conteúdo em 3 segundos...</p>
+                <div class="actions">
+                    <a href="home.html" class="btn btn-primary">Acessar Conteúdo Agora</a>
+                    <a href="index.html" class="btn btn-secondary">Verificar Outro Token</a>
+                </div>
+            `;
+        }
+
+        // Mostrar mensagem para token expirado
+        function showExpiredTokenMessage(token) {
+            contentDiv.innerHTML = `
+                <div class="icon warning">⚠️</div>
+                <h1 class="title">Token Expirado</h1>
+                <p class="subtitle">Seu token de acesso não está mais válido.</p>
+                <div class="token-info">
+                    Token: ${token.substring(0, 3)}***${token.substring(token.length - 3)}
+                </div>
+                <div class="support-info">
+                    <p>Entre em contato com o administrador para obter um novo token de acesso.</p>
+                    <p><a href="#" class="support-link">Solicitar novo token</a></p>
+                </div>
+                <div class="actions">
+                    <a href="index.html" class="btn btn-primary">Tentar com Outro Token</a>
+                </div>
+            `;
+        }
+
+        // Mostrar mensagem para token inválido
+        function showInvalidTokenMessage(token) {
+            contentDiv.innerHTML = `
+                <div class="icon error">❌</div>
+                <h1 class="title">Token Inválido</h1>
+                <p class="subtitle">O token fornecido não é reconhecido pelo sistema.</p>
+                <div class="token-info">
+                    Token: ${token}
+                </div>
+                <div class="support-info">
+                    <p>Verifique se digitou o token corretamente ou entre em contato com o suporte.</p>
+                    <p><a href="#" class="support-link">Precisa de ajuda?</a></p>
+                </div>
+                <div class="actions">
+                    <a href="index.html" class="btn btn-primary">Tentar Novamente</a>
+                </div>
+            `;
+        }
+
+        // Mostrar erro no sistema
+        function showSystemError() {
+            contentDiv.innerHTML = `
+                <div class="icon error">❌</div>
+                <h1 class="title">Erro no Sistema</h1>
+                <p class="subtitle">Não foi possível verificar seu token no momento.</p>
+                <div class="support-info">
+                    <p>Tente novamente mais tarde ou entre em contato com o suporte técnico.</p>
+                    <p><a href="#" class="support-link">Contatar Suporte</a></p>
+                </div>
+                <div class="actions">
+                    <a href="index.html" class="btn btn-primary">Voltar para a Página Inicial</a>
+                </div>
+            `;
+        }
+
+        // Iniciar a verificação quando a página carregar
+        document.addEventListener('DOMContentLoaded', verifyToken);
+    </script>
+</body>
+</html>
