@@ -1,3 +1,66 @@
-<video controls>
-  <source src="https://player-tvcultura.stream.uol.com.br/live/tvcultura.m3u8" type="application/x-mpegURL">
-</video>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minha Live App</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            font-family: Arial, sans-serif;
+        }
+        .player {
+            width: 100%;
+            height: 100vh;
+            background: #000;
+        }
+        .controls {
+            padding: 10px;
+            background: #333;
+            color: white;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="playStream()">▶️ Play</button>
+        <button onclick="pauseStream()">⏸️ Pause</button>
+        <button onclick="fullscreen()">📺 Tela Cheia</button>
+    </div>
+    
+    <video id="myVideo" class="player" controls>
+        <source src="https://player-tvcultura.stream.uol.com.br/live/tvcultura.m3u8" type="application/x-mpegURL">
+        Seu navegador não suporta o player de vídeo.
+    </video>
+
+    <script>
+        const video = document.getElementById('myVideo');
+        
+        function playStream() {
+            video.play();
+        }
+        
+        function pauseStream() {
+            video.pause();
+        }
+        
+        function fullscreen() {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            }
+        }
+        
+        // Tenta reproduzir automaticamente (pode ser bloqueado por alguns navegadores)
+        video.play().catch(error => {
+            console.log('Auto-play bloqueado, clique em Play');
+        });
+    </script>
+</body>
+</html>
